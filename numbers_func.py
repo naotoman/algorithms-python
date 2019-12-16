@@ -36,6 +36,20 @@ def prime_fact_list(n):
         factors.append(n)
     return factors
 
+# 約数の列挙
+def divisors(n):
+    l = []
+    r = []
+    x = 1
+    while x * x < n:
+        if n % x == 0:
+            l.append(x)
+            r.append(n//x)
+        x += 1
+    if x * x == n:
+        l.append(x)
+    return l + r[::-1]
+
 # 繰り返し自乗法(mod) #べき乗 #冪乗
 def pow_mod(base, exp, mod):
     res = 1
@@ -49,10 +63,21 @@ def pow_mod(base, exp, mod):
 
 # 最大公約数 #ユークリットの互除法
 def gcd(a, b):
-    a, b = min(a, b), max(a, b)
     while a > 0:
         a, b = b % a, a
     return b
+
+# エラトステネスの篩
+def prime_flags(n):
+    is_prime = [True] * (n + 1)
+    is_prime[0:2] = [False, False]
+    i = 2
+    while i * i <= n:
+        if is_prime[i]:
+            for j in range(i * i, n+1, i):
+                is_prime[j] = False
+        i += 1
+    return is_prime
 
 # 階乗
 class Factorials(object):
