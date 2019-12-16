@@ -1,10 +1,8 @@
 # 素因数分解
 def prime_fact_dic(n):
     """Returns the dictionary that contains the prime factors of integer `n`.
-
     Args:
       n (int): An integer greater than 1.
-    
     Returns:
       dict: The dictionary whose keys are the prime factors of `n` and values are the number of those appearances.
     """
@@ -22,10 +20,8 @@ def prime_fact_dic(n):
 # 素因数分解
 def prime_fact_list(n):
     """Returns the list that contians the prime factors of integer `n`.
-
     Args:
       n (int): An integer greater than 1.
-    
     Returns:
       list: The list that contains the all prime factors of `n`.
     """
@@ -40,29 +36,7 @@ def prime_fact_list(n):
         factors.append(n)
     return factors
 
-# #二項係数(mod)
-def comb(n, k, mod, fac, finv):
-    if n < k or n < 0 or k < 0:
-        return 0
-    return fac[n] * (finv[k] * finv[n - k] % mod) % mod
-
-# 階乗の逆元(mod)
-def factorials_inv_mod(n, mod):
-    inv = [1] * (n + 1)
-    factorials_inv = [1] * (n + 1)
-    for i in range(2, n + 1):
-        inv[i] = mod - inv[mod % i] * (mod // i) % mod
-        factorials_inv[i] = factorials_inv[i - 1] * inv[i] % mod
-    return factorials_inv
-
-# 階乗(mod)
-def factorials_mod(n, mod):
-    factorials = [1] * (n + 1)
-    for i in range(2, n+1):
-        factorials[i] = (factorials[i-1] * i) % mod
-    return factorials
-
-# 二分累乗法(mod) #べき乗 #冪乗
+# 繰り返し自乗法(mod) #べき乗 #冪乗
 def pow_mod(base, exp, mod):
     res = 1
     x = base
@@ -79,3 +53,28 @@ def gcd(a, b):
     while a > 0:
         a, b = b % a, a
     return b
+
+# 階乗
+class Factorials(object):
+    def __init__(self, n, mod):
+        inv = [1] * (n + 1)
+        self.__mod = mod
+        self.__fac = [1] * (n + 1)
+        self.__fac_inv = [1] * (n + 1)
+        for i in range(2, n+1):
+            self.__fac[i] = (self.__fac[i-1] * i) % mod
+            inv[i] = mod - inv[mod % i] * (mod // i) % mod
+            self.__fac_inv[i] = self.__fac_inv[i - 1] * inv[i] % mod
+        
+    def fac(self, n):
+            return self.__fac[n]
+
+    def perm(self, n, k):
+        if n < k or n < 0 or k < 0:
+            return 0
+        return self.__fac[n] * self.__fac_inv[n - k] % self.__mod
+
+    def comb(self, n, k):
+        if n < k or n < 0 or k < 0:
+            return 0
+        return self.__fac[n] * (self.__fac_inv[k] * self.__fac_inv[n - k] % self.__mod) % self.__mod
